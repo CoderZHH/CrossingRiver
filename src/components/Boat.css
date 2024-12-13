@@ -1,0 +1,49 @@
+.boat {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  background-color: #795548;
+  border-radius: 10px;
+  transition: transform 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.boat.left {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.boat.right {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.boat-content {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.cross-button {
+  padding: 5px 10px;
+  background-color: #ff9800;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cross-button:hover:not(:disabled) {
+  background-color: #f57c00;
+}
+
+.cross-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+} 

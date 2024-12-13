@@ -1,0 +1,260 @@
+.app {
+  text-align: center;
+  min-height: 90vh;
+  background-color: #f0f8ff;
+  padding: 20px;
+}
+
+.app-header {
+  margin-bottom: 30px;
+}
+
+.app-header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+}
+
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.left-panel {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.right-panel {
+  width: 240px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 80%;
+  background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
+  overflow: auto;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 0 0 8px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.right-panel h3 {
+  padding: 15px;
+  margin: 0;
+  background-color: #3498db;
+  color: white;
+  border-radius: 8px 0 0 0;
+}
+
+.right-panel ul {
+  list-style-type: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.right-panel li {
+  padding: 15px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: #333;
+  font-size: 1rem;
+  text-align: left;
+  border-left: 4px solid #3498db;
+  transition: all 0.3s ease;
+}
+
+.right-panel li:hover {
+  background-color: #f8f9fa;
+  transform: translateX(-5px);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.controls button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.controls button:hover {
+  background-color: #2980b9;
+}
+
+.controls button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.hints-list {
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.hint-header {
+  background: #3498db;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hint-step {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.hint-step:hover {
+  transform: translateY(-2px);
+}
+
+.step-number {
+  background: #f8f9fa;
+  padding: 8px 12px;
+  font-weight: bold;
+  color: #3498db;
+  border-bottom: 1px solid #eee;
+}
+
+.step-content {
+  padding: 12px;
+}
+
+.step-action {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  color: #2c3e50;
+}
+
+.step-state {
+  color: #666;
+  line-height: 1.5;
+}
+
+.step-state > div {
+  padding: 4px 0;
+}
+
+.hint-item:nth-child(6n+1) {
+  font-weight: bold;
+  color: #2196f3;
+}
+
+/* 成功提示的样式 */
+.success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  animation: dropIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.success-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite;
+}
+
+.success-modal h2 {
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 28px;
+}
+
+.success-modal p {
+  color: #666;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.success-emojis {
+  font-size: 24px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.success-emojis > * {
+  animation: float 2s infinite ease-in-out;
+}
+
+/* 动画关键帧 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dropIn {
+  0% {
+    transform: translateY(-200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 让每个表情错开浮动 */
+.success-emojis > *:nth-child(1) { animation-delay: 0s; }
+.success-emojis > *:nth-child(2) { animation-delay: 0.2s; }
+.success-emojis > *:nth-child(3) { animation-delay: 0.4s; }
+.success-emojis > *:nth-child(4) { animation-delay: 0.6s; }
+
+/* 添加滑入动画 */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+  
