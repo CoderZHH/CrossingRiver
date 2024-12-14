@@ -2,13 +2,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 800px;
   height: 400px;
+  position: relative;
+  margin: 0 auto;
+  padding: 0 160px;
 }
 
 .bank {
-  width: 200px;
+  position: absolute;
+  width: 150px;
   height: 300px;
   background-color: #8bc34a;
   border-radius: 10px;
@@ -16,23 +19,29 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.river {
-  flex: 1;
-  height: 200px;
-  background-color: #64b5f6;
-  margin: 0 20px;
-  border-radius: 10px;
-  position: relative;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .left-bank {
-  border-right: none;
+  left: 0;
 }
 
 .right-bank {
-  border-left: none;
+  right: 0;
+}
+
+.river {
+  position: absolute;
+  left: 160px;
+  right: 160px;
+  height: 200px;
+  background-color: #64b5f6;
+  border-radius: 10px;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .controls {

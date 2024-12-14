@@ -8,6 +8,7 @@
   cursor: move;
   user-select: none;
   transition: transform 0.2s;
+  z-index: 15;
 }
 
 .character:hover {
