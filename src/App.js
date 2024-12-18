@@ -3,8 +3,8 @@ import RiverCrossing from './components/RiverCrossing';
 import Hints from './components/Hints';
 import SuccessModal from './components/SuccessModal';
 import GameControls from './components/GameControls';
-import { findSolution, State, goalState } from './solver';
-import { findCharacterDifferences, formatBankState } from './utils/gameUtils';
+import { findSolution, State, goalState } from './utils/solver';
+import { formatBankState } from './utils/gameUtils';
 import { ICONS, getCharacterIcon } from './constants/icons';
 import './App.css';
 
@@ -25,6 +25,11 @@ function App() {
   const [isDemoPlaying, setIsDemoPlaying] = useState(false);
   const [demoTimeout, setDemoTimeout] = useState(null);
   const [currentDemoStep, setCurrentDemoStep] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [timerInterval, setTimerInterval] = useState(null);
+  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
+  const [username, setUsername] = useState('');
+  const [records, setRecords] = useState([]);
 
   const DEMO_STEPS = [
     { character: '羊', from: 'left', to: 'boat' },
@@ -60,6 +65,27 @@ function App() {
     { character: '羊', from: 'boat', to: 'right' }
   ];
 
+  const startTimer = () => {
+    if (!timerInterval) {
+      const interval = setInterval(() => {
+        setTimer(prevTime => prevTime + 1);
+      }, 1000);
+      setTimerInterval(interval);
+    }
+  };
+
+  const stopTimer = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      setTimerInterval(null);
+    }
+  };
+
+  const resetTimer = () => {
+    stopTimer();
+    setTimer(0);
+  };
+
   const handleReset = () => {
     if (isDemoPlaying) {
       clearTimeout(demoTimeout);
@@ -71,6 +97,7 @@ function App() {
     setGameHistory([initialState]);
     setCurrentStep(0);
     setHints([]);
+    resetTimer();
   };
 
   const handleUndo = () => {
@@ -206,6 +233,28 @@ function App() {
     }
   }, [currentStep, isSidebarOpen]);
 
+  const handleSuccess = () => {
+    stopTimer();
+    setIsUsernameModalOpen(true);
+  };
+
+  const handleUsernameSubmit = (e) => {
+    e.preventDefault();
+    setIsUsernameModalOpen(false);
+    setIsSuccess(true);
+
+    // 添加通关记录
+    const newRecord = { username, time: timer };
+    setRecords((prevRecords) => [...prevRecords, newRecord]);
+
+    // 3秒后自动隐藏成功提示
+    setTimeout(() => setIsSuccess(false), 3000);
+  };
+
+  const sortedRecords = records
+    .slice()
+    .sort((a, b) => a.time - b.time);
+
   useEffect(() => {
     const currentState = gameHistory[currentStep];
     const isGameSuccess = 
@@ -215,9 +264,7 @@ function App() {
       currentState.boatPosition === 'right';
     
     if (isGameSuccess) {
-      setIsSuccess(true);
-      // 3秒后自动隐藏成功提示
-      setTimeout(() => setIsSuccess(false), 3000);
+      handleSuccess();
     }
   }, [currentStep, gameHistory]);
 
@@ -229,10 +276,33 @@ function App() {
     };
   }, [demoTimeout]);
 
+  useEffect(() => {
+    if (currentStep > 0 && !isSuccess) {
+      startTimer();
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      stopTimer();
+    }
+  }, [isSuccess]);
+
   return (
     <div className="app">
       <header className="app-header">
         <h1>过河游戏</h1>
+        <div>计时: {timer} 秒</div>
+        <div className="records">
+          <h3>通关记录</h3>
+          <ul>
+            {sortedRecords.map((record, index) => (
+              <li key={index}>
+                {index + 1}. {record.username} - {record.time} 秒
+              </li>
+            ))}
+          </ul>
+        </div>
       </header>
       <main className="main-content">
         <div className="left-panel">
@@ -256,7 +326,23 @@ function App() {
         </div>
         <Hints hints={hints} isSidebarOpen={isSidebarOpen} />
       </main>
-      <SuccessModal isSuccess={isSuccess} />
+      {isUsernameModalOpen && (
+        <div className="username-modal">
+          <form onSubmit={handleUsernameSubmit}>
+            <label>
+              请输入您的用户名:
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </label>
+            <button type="submit">提交</button>
+          </form>
+        </div>
+      )}
+      <SuccessModal isSuccess={isSuccess} username={username} />
     </div>
   );
 }

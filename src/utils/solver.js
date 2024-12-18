@@ -1,4 +1,4 @@
-import { checkBankRules, checkBoatRules, checkCrossingRules } from './gameRules.js';
+import { checkBankRules, checkBoatRules, checkCrossingRules } from '../constants/gameRules.js';
 
 class State {
   constructor(leftBank, rightBank, boatPosition, boatPassengers = []) {

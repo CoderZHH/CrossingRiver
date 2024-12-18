@@ -1,5 +1,6 @@
 import React from 'react';
 import './Character.css';
+import { getCharacterIcon } from '../constants/icons';
 
 function Character({ name, onMove }) {
   const handleDragStart = (e) => {
@@ -10,21 +11,6 @@ function Character({ name, onMove }) {
     onMove('boat'); // 点击时移动到船上
   };
 
-  const getCharacterEmoji = () => {
-    switch (name) {
-      case '农夫':
-        return '👨‍🌾';
-      case '狼':
-        return '🐺';
-      case '羊':
-        return '🐑';
-      case '白菜':
-        return '🥬';
-      default:
-        return '❓';
-    }
-  };
-
   return (
     <div 
       className="character"
@@ -32,7 +18,7 @@ function Character({ name, onMove }) {
       onDragStart={handleDragStart}
       onClick={handleClick}
     >
-      <span className="character-emoji">{getCharacterEmoji()}</span>
+      <span className="character-emoji">{getCharacterIcon(name)}</span>
       <span className="character-name">{name}</span>
     </div>
   );

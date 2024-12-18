@@ -1,0 +1,102 @@
+@startuml
+package src {
+    package components {
+        class App {
+            +handleReset()
+            +handleUndo()
+            +handleDemo()
+            +playNextStep()
+            +calculateSolution()
+            +toggleSidebar()
+            +handleSuccess()
+            +handleUsernameSubmit()
+        }
+
+        class RiverCrossing {
+            +handleDemoMove()
+            +moveBoat()
+        }
+
+        class Boat {
+            +handleDragOver()
+            +handleDrop()
+            +handleCharacterDragStart()
+            +handleCharacterClick()
+            +handleCross()
+        }
+
+        class Character {
+            +handleDragStart()
+            +handleClick()
+        }
+
+        class GameControls {
+            +onReset()
+            +onUndo()
+            +onDemo()
+            +onToggleHints()
+        }
+
+        class Hints {
+            +hints
+            +isSidebarOpen
+        }
+
+        class SuccessModal {
+            +isSuccess
+            +username
+        }
+    }
+
+    package constants {
+        class icons {
+            +ICONS
+            +getCharacterIcon()
+        }
+    }
+
+    package utils {
+        class gameUtils {
+            +formatBankState()
+        }
+        class gameRules {
+            +checkBoatRules()
+            +checkCrossingRules()
+            +checkBankRules()
+        }
+        package solver {
+            class State {
+                +leftBank
+                +rightBank
+                +boatPosition
+                +boatPassengers
+                +isGoalState()
+                +getStateKey()
+                +clone()
+            }
+
+            class findsolver {
+                +findSolution()
+                +goalState
+            }
+    }
+    }
+    
+
+
+}
+App --> RiverCrossing 
+App --> GameControls 
+App --> Hints 
+App --> SuccessModal 
+App --> solver 
+App --> gameUtils 
+App --> icons 
+Character --> icons 
+RiverCrossing --> Boat 
+RiverCrossing --> Character 
+SuccessModal --> icons 
+gameUtils --> icons 
+findsolver --> gameRules 
+findsolver --> State 
+@enduml

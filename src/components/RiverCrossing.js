@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Boat from './Boat';
 import Character from './Character';
 import './RiverCrossing.css';
-import { checkBoatRules, checkBankRules } from '../gameRules';
+import { checkBoatRules, checkBankRules } from '../constants/gameRules';
 
 const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, setCurrentStep, initialState }, ref) => {
   const [leftBank, setLeftBank] = useState(initialState.leftBank);
