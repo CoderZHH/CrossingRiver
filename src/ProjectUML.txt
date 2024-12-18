@@ -58,6 +58,7 @@ package src {
     package utils {
         class gameUtils {
             +formatBankState()
+            +formatStateChange()
         }
         class gameRules {
             +checkBoatRules()

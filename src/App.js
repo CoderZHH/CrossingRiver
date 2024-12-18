@@ -4,7 +4,7 @@ import Hints from './components/Hints';
 import SuccessModal from './components/SuccessModal';
 import GameControls from './components/GameControls';
 import { findSolution, State, goalState } from './utils/solver';
-import { formatBankState } from './utils/gameUtils';
+import { formatBankState, formatStateChange } from './utils/gameUtils';
 import { ICONS, getCharacterIcon } from './constants/icons';
 import './App.css';
 
@@ -93,7 +93,7 @@ function App() {
       setIsDemoPlaying(false);
     }
     setCurrentDemoStep(0);
-    
+
     setGameHistory([initialState]);
     setCurrentStep(0);
     setHints([]);
@@ -134,7 +134,7 @@ function App() {
     }
 
     const step = DEMO_STEPS[stepIndex];
-    
+
     const executeStep = () => {
       if (step.type === 'cross') {
         riverCrossingRef.current.moveBoat();
@@ -142,9 +142,9 @@ function App() {
         const { character, from, to } = step;
         riverCrossingRef.current.handleDemoMove(character, from, to);
       }
-      
+
       setCurrentDemoStep(stepIndex + 1);
-      
+
       console.log('设置下一步定时器');
       const timeout = setTimeout(() => {
         console.log('执行下一步');
@@ -172,24 +172,7 @@ function App() {
       return;
     }
 
-    // 格式化状态变化
-    const formatStateChange = (current, next) => {
-      if (current.boatPosition !== next.boatPosition) {
-        const direction = next.boatPosition === 'right' ? ICONS.right : ICONS.left;
-        return `${ICONS.boat} ${direction} 划船`;
-      }
-      
-      const currentBoatSet = new Set(current.boatPassengers);
-      const nextBoatSet = new Set(next.boatPassengers);
-      
-      if (nextBoatSet.size > currentBoatSet.size) {
-        const boarding = next.boatPassengers.filter(p => !currentBoatSet.has(p));
-        return `${boarding.map(getCharacterIcon).join('')} ${ICONS.arrow} ${ICONS.boat}`;
-      }
-      
-      const unboarding = current.boatPassengers.filter(p => !nextBoatSet.has(p));
-      return `${unboarding.map(getCharacterIcon).join('')} ${ICONS.arrow} ${current.boatPosition === 'left' ? '🏖️' : '🏝️'}`;
-    };
+
 
     // 修改提示信息的生成方式
     const newHints = [];
@@ -201,7 +184,7 @@ function App() {
     for (let i = 0; i < solution.length - 1; i++) {
       const current = solution[i];
       const next = solution[i + 1];
-      
+
       newHints.push({
         type: 'step',
         stepNumber: i + 1,
@@ -213,7 +196,7 @@ function App() {
         }
       });
     }
-    
+
     setHints(newHints);
   };
 
@@ -257,12 +240,12 @@ function App() {
 
   useEffect(() => {
     const currentState = gameHistory[currentStep];
-    const isGameSuccess = 
-      currentState.leftBank.length === 0 && 
+    const isGameSuccess =
+      currentState.leftBank.length === 0 &&
       currentState.boatPassengers.length === 0 &&
       currentState.rightBank.length === 4 &&
       currentState.boatPosition === 'right';
-    
+
     if (isGameSuccess) {
       handleSuccess();
     }

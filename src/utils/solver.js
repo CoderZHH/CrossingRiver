@@ -140,7 +140,7 @@ function generateNeighbors(state) {
         const boardState = state.clone();
         // 保持原有乘客，添加新乘客
         boardState.boatPassengers = [...state.boatPassengers, passenger];
-        
+
         // 从当前岸边移除上船的乘客
         if (state.boatPosition === 'left') {
           boardState.leftBank = boardState.leftBank.filter(item => item !== passenger);
@@ -177,7 +177,7 @@ function generateNeighbors(state) {
         console.log(`\n尝试 ${passenger} 上船:`);
         const boardState = state.clone();
         boardState.boatPassengers = [passenger];
-        
+
         // 从当前岸边移除上船的乘客
         if (state.boatPosition === 'left') {
           boardState.leftBank = boardState.leftBank.filter(item => item !== passenger);
@@ -213,13 +213,13 @@ function generateNeighbors(state) {
 
           const boardState = state.clone();
           boardState.boatPassengers = [passenger1, passenger2];
-          
+
           // 从当前岸边移除上船的乘客
           if (state.boatPosition === 'left') {
-            boardState.leftBank = boardState.leftBank.filter(item => 
+            boardState.leftBank = boardState.leftBank.filter(item =>
               item !== passenger1 && item !== passenger2);
           } else {
-            boardState.rightBank = boardState.rightBank.filter(item => 
+            boardState.rightBank = boardState.rightBank.filter(item =>
               item !== passenger1 && item !== passenger2);
           }
 
@@ -285,10 +285,10 @@ function generateNeighbors(state) {
     for (const passenger of state.boatPassengers) {
       console.log(`\n尝试 ${passenger} 下船:`);
       const unboardState = state.clone();
-      
+
       // 从船上移除下船的乘客
       unboardState.boatPassengers = unboardState.boatPassengers.filter(p => p !== passenger);
-      
+
       // 将乘客添加到当前岸边
       if (state.boatPosition === 'left') {
         unboardState.leftBank = [...unboardState.leftBank, passenger];
@@ -342,8 +342,4 @@ function generateNeighbors(state) {
 }
 
 
-
-
-
-// 修改导出方式
 export { State, findSolution, goalState };
