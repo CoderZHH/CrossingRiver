@@ -10,6 +10,7 @@ package src {
             +toggleSidebar()
             +handleSuccess()
             +handleUsernameSubmit()
+            +recordAction()
         }
 
         class RiverCrossing {

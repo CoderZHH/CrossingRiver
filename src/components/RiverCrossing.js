@@ -6,7 +6,7 @@ import Character from './Character';
 import './RiverCrossing.css';
 import { checkBoatRules, checkBankRules } from '../constants/gameRules';
 
-const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, setCurrentStep, initialState }, ref) => {
+const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, setCurrentStep, initialState, onMove, onCross }, ref) => {
   const [leftBank, setLeftBank] = useState(initialState.leftBank);
   const [rightBank, setRightBank] = useState(initialState.rightBank);
   const [boatPosition, setBoatPosition] = useState(initialState.boatPosition);
@@ -21,12 +21,14 @@ const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, se
 
   // 处理角色移动的函数
   const handleCharacterMove = (character, from, to) => {
+    console.log('RiverCrossing: handling move', { character, from, to });
     if (to === 'boat') {
       handleCharacterClick(character, from);
     } else {
-      // 从船上到岸边
       handleCharacterClick(character, 'boat');
     }
+    // 通知父组件
+    onMove && onMove(character, from, to);
   };
 
   useEffect(() => {
@@ -43,10 +45,16 @@ const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, se
     const currentState = gameHistory[currentStep];
     const { leftBank, rightBank, boatPosition, boatPassengers } = currentState;
 
-    // 如果点击的是船上的角色，处理下船逻辑
+    // 检查角色是否已经在目标位置
     if (from === 'boat') {
-      const newBoatPassengers = boatPassengers.filter(c => c !== character);
+      // 如果角色已经在目标岸边，则不允许重复添加
       const targetBank = boatPosition === 'left' ? leftBank : rightBank;
+      if (targetBank.includes(character)) {
+        console.log('Character already exists in target bank');
+        return;
+      }
+
+      const newBoatPassengers = boatPassengers.filter(c => c !== character);
       const newState = {
         ...currentState,
         boatPassengers: newBoatPassengers,
@@ -67,6 +75,12 @@ const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, se
     }
 
     // 处理上船逻辑
+    // 检查角色是否已经在船上
+    if (boatPassengers.includes(character)) {
+      console.log('Character already on boat');
+      return;
+    }
+
     const newBoatPassengers = [...boatPassengers, character];
     const sourceBank = from === 'left' ? leftBank : rightBank;
     const newSourceBank = sourceBank.filter(c => c !== character);
@@ -106,6 +120,7 @@ const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, se
   };
 
   const moveBoat = () => {
+    console.log('RiverCrossing: moving boat');
     if (boatPassengers.length > 0 && boatPassengers.includes('农夫')) {
       const newBoatPosition = boatPosition === 'left' ? 'right' : 'left';
       const newState = {
@@ -115,6 +130,8 @@ const RiverCrossing = forwardRef(({ gameHistory, setGameHistory, currentStep, se
         boatPassengers: [...boatPassengers]
       };
       updateGameState(newState);
+      // 通知父组件
+      onCross && onCross();
     } else {
       toast.error('船需要农夫才能过河！', { position: "top-center" });
     }

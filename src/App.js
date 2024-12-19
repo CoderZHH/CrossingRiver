@@ -30,6 +30,7 @@ function App() {
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [records, setRecords] = useState([]);
+  const [userActions, setUserActions] = useState([]);
 
   const DEMO_STEPS = [
     { character: '羊', from: 'left', to: 'boat' },
@@ -226,9 +227,17 @@ function App() {
     setIsUsernameModalOpen(false);
     setIsSuccess(true);
 
+    console.log('Saving actions:', userActions);
     // 添加通关记录
-    const newRecord = { username, time: timer };
-    setRecords((prevRecords) => [...prevRecords, newRecord]);
+    const newRecord = {
+      username,
+      time: timer,
+      actions: [...userActions] // 确保保存副本
+    };
+    setRecords(prevRecords => [...prevRecords, newRecord]);
+
+    // 清空用户操作记录
+    setUserActions([]);
 
     // 3秒后自动隐藏成功提示
     setTimeout(() => setIsSuccess(false), 3000);
@@ -271,6 +280,58 @@ function App() {
     }
   }, [isSuccess]);
 
+  const recordAction = (action) => {
+    console.log('Current actions:', userActions);
+    console.log('Adding action:', action);
+    setUserActions(prevActions => [...prevActions, action]);
+  };
+
+  const handleMove = (character, from, to) => {
+    console.log('Recording action:', { character, from, to });
+    recordAction({ type: 'move', character, from, to });
+  };
+
+  const handleCross = () => {
+    console.log('Recording cross action');
+    recordAction({ type: 'cross' });
+  };
+
+  const replayActions = (actions) => {
+    console.log('Replaying actions:', actions);
+    if (!actions || actions.length === 0) {
+      console.log('No actions to replay');
+      return;
+    }
+
+    handleReset();
+    let stepIndex = 0;
+
+    const executeStep = () => {
+      if (stepIndex >= actions.length) {
+        console.log('Replay completed');
+        return;
+      }
+
+      const action = actions[stepIndex];
+      console.log('Executing step:', stepIndex, action);
+
+      if (action.type === 'cross') {
+        riverCrossingRef.current.moveBoat();
+      } else if (action.type === 'move') {
+        const { character, from, to } = action;
+        riverCrossingRef.current.handleDemoMove(character, from, to);
+      }
+
+      stepIndex++;
+      setTimeout(executeStep, 1000);
+    };
+
+    setTimeout(() => {
+      console.log('Starting replay');
+      executeStep();
+    }, 500);
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -281,7 +342,13 @@ function App() {
           <ul>
             {sortedRecords.map((record, index) => (
               <li key={index}>
-                {index + 1}. {record.username} - {record.time} 秒
+                <span>{index + 1}. {record.username} - {record.time} 秒</span>
+                <button
+                  className="replay-button"
+                  onClick={() => replayActions(record.actions)}
+                >
+                  复盘
+                </button>
               </li>
             ))}
           </ul>
@@ -296,6 +363,8 @@ function App() {
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
             initialState={initialState}
+            onMove={handleMove}
+            onCross={handleCross}
           />
           <GameControls
             onReset={handleReset}

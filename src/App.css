@@ -308,7 +308,7 @@
   padding: 15px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  width: 200px;
+  width: 250px;
   transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 0.95;
 }
@@ -328,16 +328,55 @@
 }
 
 .records li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 1rem;
   color: #2c3e50;
   margin-bottom: 8px;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
   background-color: #ecf0f1;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .records li:hover {
   background-color: #d0e6f7;
+  transform: translateX(5px);
+}
+
+/* 复盘按钮样式 */
+.replay-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.replay-button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+.replay-button:active {
+  transform: scale(0.95);
+}
+
+.replay-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* 添加图标 */
+.replay-button::before {
+  content: "🔄";
+  font-size: 1rem;
 }
   
